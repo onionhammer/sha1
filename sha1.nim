@@ -42,7 +42,7 @@ type
 template clearBuffer(w: SHA1Buffer, len = 16) =
   zeroMem(addr(w), len * sizeof(uint32))
 
-proc toHex*(digest: SHA1Digest): string = 
+proc toHex*(digest: SHA1Digest): string =
   const digits = "0123456789abcdef"
 
   var arr: array[0 .. sha_digest_size*2, char]
@@ -72,11 +72,11 @@ proc innerHash(state: var SHA1State, w: var SHA1Buffer) =
 
   var round = 0
 
-  template rot(value, bits: uint32): uint32 {.immediate.} = 
+  template rot(value, bits: uint32): uint32 {.immediate.} =
     (value shl bits) or (value shr (32 - bits))
 
-  template sha1(func, val: uint32): stmt =
-    let t = rot(a, 5) + func + e + val + w[round]
+  template sha1(fun, val: uint32): stmt =
+    let t = rot(a, 5) + fun + e + val + w[round]
     e = d
     d = c
     c = rot(b, 30)
