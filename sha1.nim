@@ -45,13 +45,11 @@ template clearBuffer(w: SHA1Buffer, len = 16) =
 proc toHex*(digest: SHA1Digest): string =
   const digits = "0123456789abcdef"
 
-  var arr: array[0 .. sha_digest_size*2, char]
+  result = newString(sha_digest_size*2)
 
   for hashByte in countdown(20-1, 0):
-    arr[int(hashByte shl 1)] = digits[int((digest[hashByte.int] shr 4) and 0xf)]
-    arr[int(hashByte shl 1) + 1] = digits[int((digest[hashByte.int]) and 0xf)]
-
-  return $arr
+    result[int(hashByte shl 1)] = digits[int((digest[hashByte.int] shr 4) and 0xf)]
+    result[int(hashByte shl 1) + 1] = digits[int((digest[hashByte.int]) and 0xf)]
 
 proc toBase64*(digest: SHA1Digest): string = base64.encode(digest)
 
