@@ -48,8 +48,8 @@ proc toHex*(digest: SHA1Digest): string =
   var arr: array[0 .. sha_digest_size*2, char]
 
   for hashByte in countdown(20-1, 0):
-    arr[hashByte shl 1] = digits[(digest[hashByte] shr 4) and 0xf]
-    arr[(hashByte shl 1) + 1] = digits[(digest[hashByte]) and 0xf]
+    arr[int(hashByte shl 1)] = digits[int((digest[hashByte.int] shr 4) and 0xf)]
+    arr[int(hashByte shl 1) + 1] = digits[int((digest[hashByte.int]) and 0xf)]
 
   return $arr
 
@@ -154,13 +154,13 @@ template computeInternal(src: expr): stmt {.immediate.} =
   while lastBlockBytes < endCurrentBlock:
 
     var value = uint32(src[lastBlockBytes + currentBlock]) shl
-                ((3'u32 - (lastBlockBytes and 3)) shl 3)
+                ((3'u32 - (lastBlockBytes.uint32 and 3)) shl 3)
 
     w[lastBlockBytes shr 2] = w[lastBlockBytes shr 2] or value
     inc(lastBlockBytes)
 
   w[lastBlockBytes shr 2] = w[lastBlockBytes shr 2] or (
-    0x80'u32 shl ((3'u32 - (lastBlockBytes and 3)) shl 3)
+    0x80'u32 shl ((3'u32 - (lastBlockBytes.uint32 and 3)) shl 3)
   )
 
   if endCurrentBlock >= 56:
